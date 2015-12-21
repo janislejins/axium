@@ -14,9 +14,9 @@ def CheckIt():
 CheckIt()
 Channel = ['0','0','0','0','0','0','0','0','0','0','0','0','0']
 def ChangeIt():
-	threading.Timer(2.0, ChangeIt).start()
-	Channel[0] = str(randint(180,255))
-	Channel[2] = str(randint(180,255))
+	threading.Timer(5.0, ChangeIt).start()
+	Channel[0] = str(randint(220,255))
+	Channel[2] = str(randint(220,255))
 	Channel[5] = '255'
 	Channel[7] = str(randint(0,255))
 	Channel[8] = str(randint(0,255))
@@ -28,7 +28,7 @@ def ChangeIt():
 	future_one = session.post("http://raspberrypi.local:9090/set_dmx", data=payload)
 # print('response one status: {0}'.format(response_one.status_code))
 ChangeIt()
-
+ 
 # first request is started in background
 
 # wait for the second request to complete, if it hasn't already
