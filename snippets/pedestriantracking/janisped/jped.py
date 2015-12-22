@@ -1,3 +1,6 @@
+# good refs -
+#https://github.com/julierthanjulie/PedestrianTracking
+
 import cv2
 import numpy as np
 import sys
@@ -8,6 +11,7 @@ pedCascade = cv2.CascadeClassifier(cascPath)
 # start a video capture using default camera
 video_capture = cv2.VideoCapture(0)
 #add globals for lights
+
 # here will be where the aysnc posts will be initiated
 def sequencers():
     pass
