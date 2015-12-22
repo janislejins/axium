@@ -2,18 +2,18 @@ import cv2
 import numpy as np
 import sys
 import math
-
+# the cascade for pedistrians (in same directory)
 cascPath = 'hogcascade_pedestrians.xml'
 pedCascade = cv2.CascadeClassifier(cascPath)
-
+# start a video capture using default camera
 video_capture = cv2.VideoCapture(0)
-
+#add globals for lights
+# here will be where the aysnc posts will be initiated
 def sequencers():
     pass
-
+#start the posts
 sequencers()
-
-
+#do an infinite loop
 while True:
     # Capture frame-by-frame
     ret, frame = video_capture.read()
