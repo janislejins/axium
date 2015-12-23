@@ -110,8 +110,8 @@ while True:
     controller.add_listener(listener)
     #send the coordinates async
     SendXY()
-    infinity = float("inf")
-# time.sleep(10000000)
+    # infinity = float("inf")
+    time.sleep(10000000)
 # Remove the sample listener when done
 controller.remove_listener(listener)
 # quit the program, kills all threads - if they are set to Thread.daemon = True

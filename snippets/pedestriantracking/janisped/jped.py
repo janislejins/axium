@@ -5,16 +5,64 @@ import cv2
 import numpy as np
 import sys
 import math
+from requests_futures.sessions import FuturesSession
+import threading
+from random import randint
 # the cascade for pedistrians (in same directory)
 cascPath = 'hogcascade_pedestrians.xml'
 pedCascade = cv2.CascadeClassifier(cascPath)
 # start a video capture using default camera
 video_capture = cv2.VideoCapture(0)
 #add globals for lights
+light_x = 0
+light_y = 0
+lightsON = False
+
+
+# A timer which sends xy coords to the light
+def SendXY():
+    # make sure variables aren't NoneTypes and if they are change that
+    # if finger_x is None:
+    #     finger_x = 55 #assign a number inbetween range
+    # if finger_y is None:
+    #     finger_y = 80
+    # convert to strings
+    xsend = str(int(light_x))
+    ysend = str(int(light_y))
+    Channel[0] = xsend
+    Channel[2] = ysend
+    
+    if lightsON is True:
+        Channel[5] = '255'
+    else:
+        Channel[5] = '0'
+
+    Channel[7] = '255'
+    Channel[8] = '0'#str(randint(0,255))
+    Channel[9] = '0' #str(randint(0,255))
+    Channel[10] = '0' #str(randint(0,255))
+    # print Channel
+    myString = ",".join(Channel)
+    payload={'u':'0','d': myString}
+    future_one = session.post("http://raspberrypi.local:9090/set_dmx", data=payload)
+    t = threading.Timer(0.8, SendXY)
+    t.daemon = True #this shit kills the thread when the program finishes..
+    t.start()
+
+#translate one value range to another
+def translate(value, leftMin, leftMax, rightMin, rightMax):
+    # Figure out how 'wide' each range is
+    leftSpan = leftMax - leftMin
+    rightSpan = rightMax - rightMin
+    # Convert the left range into a 0-1 range (float)
+    valueScaled = float(value - leftMin) / float(leftSpan)
+    # Convert the 0-1 range into a value in the right range.
+    return rightMin + (valueScaled * rightSpan)
 
 # here will be where the aysnc posts will be initiated
 def sequencers():
-    pass
+    SendXY()
+    # pass
 #start the posts
 sequencers()
 #do an infinite loop
@@ -59,6 +107,11 @@ while True:
         radius = math.hypot(centroid[0] - furthest[0], centroid[1] - furthest[1])
         # draw a circle to the limit of cluster of people by the person who is furthest away
         cv2.circle(screen, (centroid[0],centroid[1]), int(radius), (0,0,255), 1)
+        #deliver points to the program
+        lightsON = True
+        light_x = translate(centroid[0], 0, frame.shape[0], 0, 125)
+        light_y = translate(centroid[1], 0, frame.shape[1], 0, 125)
+
     # Display the resulting frame
     cv2.imshow('Tracker', screen)
     # if i press q leave the infinite loop
