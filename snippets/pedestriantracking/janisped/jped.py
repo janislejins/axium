@@ -17,7 +17,8 @@ video_capture = cv2.VideoCapture(0)
 light_x = 0
 light_y = 0
 lightsON = False
-
+#this is all the dmx channels of the lights
+Channel = ['0','0','0','0','0','0','0','0','0','0','0','0','0']
 
 # A timer which sends xy coords to the light
 def SendXY():
@@ -61,9 +62,11 @@ def translate(value, leftMin, leftMax, rightMin, rightMax):
 
 # here will be where the aysnc posts will be initiated
 def sequencers():
+    
     SendXY()
     # pass
 #start the posts
+session = FuturesSession()
 sequencers()
 #do an infinite loop
 while True:
@@ -92,7 +95,9 @@ while True:
     # if the list is empty
     if not points:
         # print "no people"
-        pass
+        #if there are no people turn the lights off
+        lightsON = False
+        # pass
     else:
         # peoples locations
         #print points
